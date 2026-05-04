@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Workflow Portfolio</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #141b2f;
+      --card-soft: #101729;
+      --text: #eef4ff;
+      --muted: #a9b4c8;
+      --accent: #7ee7ff;
+      --accent-2: #ffd84d;
+      --line: rgba(126, 231, 255, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(126, 231, 255, 0.15), transparent 34%),
+        radial-gradient(circle at top right, rgba(255, 216, 77, 0.1), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .language-switch {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 50;
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(11, 16, 32, 0.78);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .language-switch button {
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .language-switch button.active {
+      background: var(--accent);
+      color: #07101f;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+
+    .hero {
+      padding: 48px 0 36px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(126, 231, 255, 0.06);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      max-width: 860px;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(126, 231, 255, 0.1);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: #07101f;
+      border-color: transparent;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 42px 0 18px;
+    }
+
+    .section-title h2 {
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      min-height: 330px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)), var(--card);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tag,
+    .status {
+      display: inline-flex;
+      width: fit-content;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tag {
+      background: rgba(255, 216, 77, 0.12);
+      color: var(--accent-2);
+    }
+
+    .status {
+      background: rgba(169, 180, 200, 0.12);
+      color: #d6deee;
+      border: 1px solid rgba(169, 180, 200, 0.18);
+    }
+
+    .status.live {
+      background: rgba(126, 231, 255, 0.12);
+      color: var(--accent);
+      border-color: rgba(126, 231, 255, 0.28);
+    }
+
+    .card h3 {
+      font-size: 22px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    .bullets {
+      margin: 14px 0 20px;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .bullets li + li {
+      margin-top: 6px;
+    }
+
+    .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .link-chip {
+      padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      background: var(--card-soft);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .link-chip.disabled {
+      opacity: 0.46;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 216, 77, 0.24);
+      border-radius: 18px;
+      background: rgba(255, 216, 77, 0.08);
+      color: #f4e8b0;
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 52px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .language-switch {
+        top: 12px;
+        right: 12px;
+      }
+
+      .page {
+        padding-top: 72px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="language-switch" aria-label="Language switcher">
+    <button type="button" id="langEn" class="active">EN</button>
+    <button type="button" id="langJa">日本語</button>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow" data-i18n="eyebrow">AI-assisted workflow builder</div>
+      <h1 data-i18n="headline">Building practical systems with AI, from workflow design to playable prototypes.</h1>
+      <p data-i18n="intro">
+        A compact portfolio of hands-on projects showing how AI can be used beyond text generation:
+        structuring ambiguous problems, building lightweight tools, and shipping working demos.
+      </p>
+      <div class="actions">
+        <a class="button primary" href="#projects" data-i18n="viewProjects">View projects</a>
+        <a class="button" href="https://github.com/YOUR_GITHUB_USERNAME" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="button" href="https://www.linkedin.com/in/YOUR_LINKEDIN_SLUG" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-title">
+        <h2 data-i18n="selectedProjects">Selected projects</h2>
+        <span data-i18n="minimalVersion">Minimal public version</span>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div>
+            <div class="tag-row">
+              <div class="tag" data-i18n="caseStudyTag">Case Study</div>
+              <div class="status" data-i18n="preparingStatus">Preparing</div>
+            </div>
+            <h3 data-i18n="project1Title">AI-assisted Job Search Workflow</h3>
+            <p data-i18n="project1Desc">
+              A structured operating model for evaluating roles, prioritizing applications,
+              and turning job search into a repeatable decision workflow.
+            </p>
+            <ul class="bullets">
+              <li data-i18n="project1Bullet1">Role evaluation framework</li>
+              <li data-i18n="project1Bullet2">Pipeline and next-action design</li>
+              <li data-i18n="project1Bullet3">Safe use of AI with sanitized inputs</li>
+            </ul>
+          </div>
+          <div class="card-links">
+            <a class="link-chip disabled" href="#" data-i18n="comingSoon">Coming soon</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <div class="tag-row">
+              <div class="tag" data-i18n="toolTag">Tool</div>
+              <div class="status" data-i18n="preparingStatus">Preparing</div>
+            </div>
+            <h3 data-i18n="project2Title">Job Management Tool</h3>
+            <p data-i18n="project2Desc">
+              A lightweight demo tool for tracking roles, status, evaluation criteria,
+              next steps, and application momentum using dummy data.
+            </p>
+            <ul class="bullets">
+              <li data-i18n="project2Bullet1">Pipeline visibility</li>
+              <li data-i18n="project2Bullet2">Prioritization and scoring</li>
+              <li data-i18n="project2Bullet3">Dummy-data public demo</li>
+            </ul>
+          </div>
+          <div class="card-links">
+            <a class="link-chip disabled" href="#" data-i18n="comingSoon">Coming soon</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <div class="tag-row">
+              <div class="tag" data-i18n="playableTag">Playable Demo</div>
+              <div class="status live" data-i18n="liveStatus">Live</div>
+            </div>
+            <h3>WavePrime</h3>
+            <p data-i18n="project3Desc">
+              A browser-based game prototype deployed with GitHub Pages, supporting
+              keyboard/mouse input and Nintendo Switch Pro Controller play.
+            </p>
+            <ul class="bullets">
+              <li data-i18n="project3Bullet1">Single-file HTML/JS prototype</li>
+              <li data-i18n="project3Bullet2">Gamepad + PC input support</li>
+              <li data-i18n="project3Bullet3">Public playable demo</li>
+            </ul>
+          </div>
+          <div class="card-links">
+            <a class="link-chip" href="https://YOUR_GITHUB_USERNAME.github.io/YOUR_WAVEPRIME_REPO/" target="_blank" rel="noreferrer" data-i18n="playWavePrime">Play WavePrime</a>
+            <a class="link-chip" href="#" target="_blank" rel="noreferrer" data-i18n="githubRepo">GitHub repo</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="note" data-i18n="safetyNote">
+        Public portfolio version only. Real personal data, company names, emails, resumes,
+        and private job-search records should be removed or replaced with dummy data.
+      </div>
+    </section>
+
+    <footer>
+      <p data-i18n="footerNote">Replace the placeholder links with your actual GitHub Pages, GitHub, and LinkedIn URLs before publishing.</p>
+    </footer>
+  </main>
+
+  <script>
+    const copy = {
+      en: {
+        eyebrow: "AI-assisted workflow builder",
+        headline: "Building practical systems with AI, from workflow design to playable prototypes.",
+        intro: "A compact portfolio of hands-on projects showing how AI can be used beyond text generation: structuring ambiguous problems, building lightweight tools, and shipping working demos.",
+        viewProjects: "View projects",
+        selectedProjects: "Selected projects",
+        minimalVersion: "Minimal public version",
+        caseStudyTag: "Case Study",
+        toolTag: "Tool",
+        playableTag: "Playable Demo",
+        preparingStatus: "Preparing",
+        liveStatus: "Live",
+        comingSoon: "Coming soon",
+        project1Title: "AI-assisted Job Search Workflow",
+        project1Desc: "A structured operating model for evaluating roles, prioritizing applications, and turning job search into a repeatable decision workflow.",
+        project1Bullet1: "Role evaluation framework",
+        project1Bullet2: "Pipeline and next-action design",
+        project1Bullet3: "Safe use of AI with sanitized inputs",
+        project2Title: "Job Management Tool",
+        project2Desc: "A lightweight demo tool for tracking roles, status, evaluation criteria, next steps, and application momentum using dummy data.",
+        project2Bullet1: "Pipeline visibility",
+        project2Bullet2: "Prioritization and scoring",
+        project2Bullet3: "Dummy-data public demo",
+        project3Desc: "A browser-based game prototype deployed with GitHub Pages, supporting keyboard/mouse input and Nintendo Switch Pro Controller play.",
+        project3Bullet1: "Single-file HTML/JS prototype",
+        project3Bullet2: "Gamepad + PC input support",
+        project3Bullet3: "Public playable demo",
+        playWavePrime: "Play WavePrime",
+        githubRepo: "GitHub repo",
+        safetyNote: "Public portfolio version only. Real personal data, company names, emails, resumes, and private job-search records should be removed or replaced with dummy data.",
+        footerNote: "Replace the placeholder links with your actual GitHub Pages, GitHub, and LinkedIn URLs before publishing."
+      },
+      ja: {
+        eyebrow: "AI活用ワークフロー構築ポートフォリオ",
+        headline: "AIを使って、業務設計から動くプロトタイプまで実装する。",
+        intro: "AIを単なる文章生成ではなく、曖昧な課題の構造化、軽量ツールの構築、公開可能なデモ制作までつなげた実践プロジェクト集です。",
+        viewProjects: "プロジェクトを見る",
+        selectedProjects: "プロジェクト一覧",
+        minimalVersion: "公開用ミニマル版",
+        caseStudyTag: "ケーススタディ",
+        toolTag: "ツール",
+        playableTag: "プレイ可能デモ",
+        preparingStatus: "準備中",
+        liveStatus: "公開中",
+        comingSoon: "準備中",
+        project1Title: "AI活用型 Job Search Workflow",
+        project1Desc: "求人評価、応募優先順位、次アクションを整理し、転職活動を再現性のある意思決定ワークフローとして設計したプロジェクトです。",
+        project1Bullet1: "求人評価フレームワーク",
+        project1Bullet2: "パイプラインと次アクション設計",
+        project1Bullet3: "サニタイズ済み情報による安全なAI活用",
+        project2Title: "Job Management Tool",
+        project2Desc: "求人ステータス、評価基準、次アクション、進捗をダミーデータで管理する軽量デモツールです。",
+        project2Bullet1: "パイプライン可視化",
+        project2Bullet2: "優先順位付けとスコアリング",
+        project2Bullet3: "ダミーデータによる公開デモ",
+        project3Desc: "GitHub Pagesで公開したブラウザゲームプロトタイプ。キーボード・マウス操作とNintendo Switch Pro Controllerでのプレイに対応しています。",
+        project3Bullet1: "単一HTML/JSプロトタイプ",
+        project3Bullet2: "ゲームパッド + PC操作対応",
+        project3Bullet3: "公開プレイ可能デモ",
+        playWavePrime: "WavePrimeをプレイ",
+        githubRepo: "GitHub repo",
+        safetyNote: "公開用ポートフォリオ版です。実際の個人情報、会社名、メール、履歴書、非公開の転職活動記録は削除、またはダミーデータに置き換えてください。",
+        footerNote: "公開前に、GitHub Pages、GitHub、LinkedInのプレースホルダーURLを実際のリンクに差し替えてください。"
+      }
+    };
+
+    const langEn = document.getElementById("langEn");
+    const langJa = document.getElementById("langJa");
+
+    function setLanguage(lang) {
+      document.documentElement.lang = lang === "ja" ? "ja" : "en";
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (copy[lang][key]) el.textContent = copy[lang][key];
+      });
+      langEn.classList.toggle("active", lang === "en");
+      langJa.classList.toggle("active", lang === "ja");
+    }
+
+    langEn.addEventListener("click", () => setLanguage("en"));
+    langJa.addEventListener("click", () => setLanguage("ja"));
+  </script>
+</body>
+</html>
